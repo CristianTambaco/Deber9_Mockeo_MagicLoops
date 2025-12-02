@@ -181,6 +181,7 @@ Widget _buildSidebar() {
         ),
       ],
     ),
+    // ------------envuelto en un SingleChildScrollView-----
     child: SingleChildScrollView( 
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
