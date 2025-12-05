@@ -7,8 +7,8 @@ class CarritoProvider with ChangeNotifier {
   final CarritoService _service = CarritoService();
 
   // Nuevo: Estado de carga
-  bool _isLoading = false; // <-- Añade esta línea
-  bool get isLoading => _isLoading; // <-- Y esta
+  bool? _isLoading; // Ahora puede ser null
+  bool get isLoading => _isLoading ?? false; // Si es null, devuelve false
 
   List<CarritoItem> get items => _service.obtenerItems();
   Map<String, double> get totales => _service.calcularTotales();
@@ -41,20 +41,4 @@ class CarritoProvider with ChangeNotifier {
   Future<void> vaciarCarrito() async {
     await _runWithLoading(() => _service.vaciarCarrito());
   }
-
-  Future<void> finalizarCompra() async {
-  try {
-    _isLoading = true;
-    notifyListeners();
-    await _service.finalizarCompra(); // Llamamos al servicio
-  } catch (e) {
-    rethrow;
-  } finally {
-    _isLoading = false;
-    notifyListeners();
-  }
-}
-
-
-
 }

@@ -6,8 +6,6 @@ import '../widgets/loading_overlay.dart'; // Importa el overlay
 import '../models/producto.dart'; // Importa los productos
 import '../widgets/cantidad_selector.dart';
 
-import 'dart:math' as math;
-
 
 class CarritoScreen extends StatefulWidget {
   const CarritoScreen({super.key});
@@ -20,21 +18,6 @@ class _CarritoScreenState extends State<CarritoScreen> {
   // Estado local para el producto seleccionado y la cantidad
   Producto? productoSeleccionado;
   int cantidad = 1;
-
-
-
-  Future<void> _simularOperacionCompra(BuildContext context) async {
-    // Simular delay de 1-2 segundos
-    await Future.delayed(Duration(seconds: math.Random().nextInt(2) + 1));
-
-    // Simular error aleatorio (20%)
-    if (math.Random().nextDouble() < 0.2) {
-      throw Exception('Error de conexión');
-    }
-  }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -113,26 +96,17 @@ class _CarritoScreenState extends State<CarritoScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ElevatedButton(
-                onPressed: () async {
-                  try {
-                    await carrito.finalizarCompra(); // <-- Esto activa isLoading automáticamente
-
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('¡Compra finalizada con éxito!')),
-                    );
-                  } catch (e) {
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(e.toString())),
-                    );
-                  }
+                onPressed: () {
+                  // Lógica de finalizar compra
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Compra finalizada')),
+                  );
                 },
-              child: const Text('Finalizar Compra', style: TextStyle(fontSize: 18)),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Colors.green,
-              ),
+                child: const Text('Finalizar Compra', style: TextStyle(fontSize: 18)),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Colors.green,
+                ),
               ),
             ),
             const SizedBox(height: 16),

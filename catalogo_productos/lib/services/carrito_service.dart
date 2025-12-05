@@ -89,24 +89,6 @@ class CarritoService {
     return true;
   }
 
-
-
-
-  Future<bool> finalizarCompra() async {
-    await _simularDelay();
-    if (_debeFallar()) {
-      throw Exception('Error de conexión');
-    }
-    // Aquí podrías vaciar el carrito o enviar datos a un backend
-    _items.clear(); // Opcional: vaciar tras finalizar
-    return true;
-  }
-
-
-
-
-
-
   List<CarritoItem> obtenerItems() {
     return List.unmodifiable(_items);
   }
