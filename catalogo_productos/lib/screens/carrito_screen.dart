@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/carrito_provider.dart';
 import '../models/carrito_item.dart';
+import '../widgets/loading_overlay.dart'; // 
+
 
 class CarritoScreen extends StatelessWidget {
   const CarritoScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final carrito = Provider.of<CarritoProvider>(context);
+Widget build(BuildContext context) {
+  final carrito = Provider.of<CarritoProvider>(context);
 
-    return Scaffold(
+  return LoadingOverlay(
+    isLoading: carrito.isLoading,
+    child: Scaffold(
       appBar: AppBar(
         title: const Text('Carrito de Compras'),
         actions: [
@@ -68,8 +72,9 @@ class CarritoScreen extends StatelessWidget {
                 const SizedBox(height: 16),
               ],
             ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildTotales(BuildContext context, Map<String, double> totales) {
     return Padding(

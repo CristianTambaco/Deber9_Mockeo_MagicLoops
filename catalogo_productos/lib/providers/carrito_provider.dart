@@ -6,42 +6,39 @@ import 'package:catalogo_productos/services/carrito_service.dart';
 class CarritoProvider with ChangeNotifier {
   final CarritoService _service = CarritoService();
 
+  // Nuevo: Estado de carga
+  bool? _isLoading; // Ahora puede ser null
+  bool get isLoading => _isLoading ?? false; // Si es null, devuelve false
+
   List<CarritoItem> get items => _service.obtenerItems();
   Map<String, double> get totales => _service.calcularTotales();
 
-  Future<void> agregarProducto(Producto producto, int cantidad) async {
+  Future<void> _runWithLoading(Future<void> Function() operation) async {
     try {
-      await _service.agregarProducto(producto, cantidad);
+      _isLoading = true;
       notifyListeners();
+      await operation();
     } catch (e) {
       rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
+  }
+
+  Future<void> agregarProducto(Producto producto, int cantidad) async {
+    await _runWithLoading(() => _service.agregarProducto(producto, cantidad));
   }
 
   Future<void> eliminarProducto(String productoId) async {
-    try {
-      await _service.eliminarProducto(productoId);
-      notifyListeners();
-    } catch (e) {
-      rethrow;
-    }
+    await _runWithLoading(() => _service.eliminarProducto(productoId));
   }
 
   Future<void> actualizarCantidad(String productoId, int nuevaCantidad) async {
-    try {
-      await _service.actualizarCantidad(productoId, nuevaCantidad);
-      notifyListeners();
-    } catch (e) {
-      rethrow;
-    }
+    await _runWithLoading(() => _service.actualizarCantidad(productoId, nuevaCantidad));
   }
 
   Future<void> vaciarCarrito() async {
-    try {
-      await _service.vaciarCarrito();
-      notifyListeners();
-    } catch (e) {
-      rethrow;
-    }
+    await _runWithLoading(() => _service.vaciarCarrito());
   }
 }

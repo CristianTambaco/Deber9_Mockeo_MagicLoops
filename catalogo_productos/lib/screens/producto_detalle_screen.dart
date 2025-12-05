@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/producto.dart';
 import 'package:provider/provider.dart';
-import '../providers/carrito_provider.dart'; // Asegúrate de que esta línea esté presente
+import '../providers/carrito_provider.dart'; // 
+import '../widgets/loading_overlay.dart'; // 
 
 
 
@@ -14,8 +15,12 @@ class ProductoDetalleScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+Widget build(BuildContext context) {
+  final carritoProvider = Provider.of<CarritoProvider>(context);
+
+  return LoadingOverlay(
+    isLoading: carritoProvider.isLoading,
+    child: Scaffold(
       backgroundColor: Colors.grey[100],
       body: CustomScrollView(
         slivers: [
@@ -96,28 +101,28 @@ class ProductoDetalleScreen extends StatelessWidget {
                   ),
                   // Botón flotante de agregar al carrito
                   Positioned(
-                  bottom: 16,
-                  right: 16,
-                  child: FloatingActionButton(
-                    backgroundColor: Colors.blue,
-                    onPressed: () async {
-                      final provider = Provider.of<CarritoProvider>(context, listen: false);
-                      try {
-                        await provider.agregarProducto(producto, 1);
-                        if (!context.mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('${producto.nombre} agregado al carrito')),
-                        );
-                      } catch (e) {
-                        if (!context.mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(e.toString())),
-                        );
-                      }
-                    },
-                    child: const Icon(Icons.add_shopping_cart, color: Colors.white),
+                    bottom: 16,
+                    right: 16,
+                    child: FloatingActionButton(
+                      backgroundColor: Colors.blue,
+                      onPressed: () async {
+                        final provider = Provider.of<CarritoProvider>(context, listen: false);
+                        try {
+                          await provider.agregarProducto(producto, 1);
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('${producto.nombre} agregado al carrito')),
+                          );
+                        } catch (e) {
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(e.toString())),
+                          );
+                        }
+                      },
+                      child: const Icon(Icons.add_shopping_cart, color: Colors.white),
+                    ),
                   ),
-                ),
                 ],
               ),
             ),
@@ -180,8 +185,9 @@ class ProductoDetalleScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   // Método auxiliar para obtener iconos
   IconData _getIcono(String tipo) {

@@ -16,38 +16,32 @@ class ProductoCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductoDetalleScreen(producto: producto),
-          ),
+Widget build(BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProductoDetalleScreen(producto: producto),
+        ),
+      );
+    },
+    onLongPress: () async {
+      final provider = Provider.of<CarritoProvider>(context, listen: false);
+      try {
+        await provider.agregarProducto(producto, 1);
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${producto.nombre} agregado al carrito')),
         );
-      },
-
-      onLongPress: () async {
-    final provider = Provider.of<CarritoProvider>(context, listen: false);
-    try {
-      await provider.agregarProducto(producto, 1);
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${producto.nombre} agregado al carrito')),
-      );
-    } catch (e) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
-    }
-  },
-
-
-
-
-
-      child: Container(
+      } catch (e) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
+      }
+    },
+    child: Container(
         // CONTAINER: Widget para decoración y dimensiones
         decoration: BoxDecoration(
           color: Colors.white,
