@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/producto.dart';
+import 'package:provider/provider.dart';
+import '../providers/carrito_provider.dart'; // Asegúrate de que esta línea esté presente
+
+
 
 class ProductoDetalleScreen extends StatelessWidget {
   final Producto producto;
@@ -92,14 +96,28 @@ class ProductoDetalleScreen extends StatelessWidget {
                   ),
                   // Botón flotante de agregar al carrito
                   Positioned(
-                    bottom: 16,
-                    right: 16,
-                    child: FloatingActionButton(
-                      backgroundColor: Colors.blue,
-                      onPressed: () {},
-                      child: const Icon(Icons.add_shopping_cart, color: Colors.white),
-                    ),
+                  bottom: 16,
+                  right: 16,
+                  child: FloatingActionButton(
+                    backgroundColor: Colors.blue,
+                    onPressed: () async {
+                      final provider = Provider.of<CarritoProvider>(context, listen: false);
+                      try {
+                        await provider.agregarProducto(producto, 1);
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('${producto.nombre} agregado al carrito')),
+                        );
+                      } catch (e) {
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(e.toString())),
+                        );
+                      }
+                    },
+                    child: const Icon(Icons.add_shopping_cart, color: Colors.white),
                   ),
+                ),
                 ],
               ),
             ),
