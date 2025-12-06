@@ -1,3 +1,4 @@
+
 // lib/widgets/cantidad_selector.dart
 import 'package:flutter/material.dart';
 
@@ -57,10 +58,12 @@ class _CantidadSelectorState extends State<CantidadSelector> {
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(),
         ),
-        Container(
-          width: 40,
-          alignment: Alignment.center,
-          child: Text('$_cantidad'),
+        // Envuelve el contenedor del número con Expanded para que ocupe el espacio disponible
+        Expanded(
+          child: Container(
+            alignment: Alignment.center,
+            child: Text('$_cantidad'),
+          ),
         ),
         IconButton(
           onPressed: _incrementar,
